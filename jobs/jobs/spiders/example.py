@@ -11,6 +11,7 @@ from re import sub
 class JobsItem(scrapy.Item):
     # define the fields for your item here like:
     closes = scrapy.Field()
+    closes_on = scrapy.Field()
     contract_type = scrapy.Field()
     details = scrapy.Field()
     expires = scrapy.Field()
