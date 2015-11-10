@@ -50,28 +50,26 @@ class MySpider(scrapy.spiders.CrawlSpider):
             )
 
     def parse_item(self, response):
-        #self.logger.info('Say something here?', response.url)
-
 
         item = JobsItem()
         item['title'] = response.xpath('//h1/text()').extract()
         item['university'] = response.xpath('//h3//strong/text()').extract()
         item['url'] = response.url
-        headings = response.xpath('//td[@class="detail-heading"]/text()').extract()
+        heads = response.xpath('//td[@class="detail-heading"]/text()').extract()
         ans = response.xpath('//td[not(@class="detail-heading")]/text()').extract()
         answers = []
+        headings = []
 
         # Strip the answers list of whitespace and put spaces in between
         for i in ans:
-             remove = remove_whitespace(i)
-             answers.append(remove)
+             remove = sub('\s+', ' ', i)
+             answers.append(remove.strip())
 
         # Strip headings of all spacing, replacing with nothing
-        for i in headings:
+        for i in heads:
             i = i.lower()
             remove = sub('\s+', '_', i)
-            answers.append(remove)
-
+            headings.append(remove.replace(":", ''))
 
         # Make each heading the key to item and the answers the values
 
@@ -86,8 +84,3 @@ class MySpider(scrapy.spiders.CrawlSpider):
 
 
         return item
-
-    def remove_whitespace(s):
-        """Removes all whitespace from the given string"""
-        remove = sub('\s+', ' ', s)
-        return remove
