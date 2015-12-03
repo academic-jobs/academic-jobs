@@ -3,6 +3,7 @@ import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
 from re import sub
+from dateutil.parser import parse
 
 # Things to remember:
 # Day a job expires or closes it becomes inactive
@@ -12,21 +13,19 @@ class JobsItem(scrapy.Item):
     # define the fields for your item here like:
     active = scrapy.Field()
     closes = scrapy.Field()
-    closes_on = scrapy.Field()
     contract_type = scrapy.Field()
     details = scrapy.Field()
-    expires = scrapy.Field()
+
     funding_amount = scrapy.Field()
     funding_for = scrapy.Field()
     job_ref = scrapy.Field()
     # job_type is not from the details box
     job_type = scrapy.Field()
     hours = scrapy.Field()
-
     location = scrapy.Field()
+    main_subject = scrapy.Field()
     placed_on = scrapy.Field()
     qualification_type = scrapy.Field()
-    reference = scrapy.Field()
 
     salary = scrapy.Field()
     subject_area = scrapy.Field()
@@ -56,6 +55,10 @@ class MySpider(scrapy.spiders.CrawlSpider):
         item['title'] = response.xpath('//h1/text()').extract()
         item['university'] = response.xpath('//h3//strong/text()').extract()
         item['url'] = response.url
+        duplicates = {'closes_on':'closes',
+                      'expires':'closes',
+                      'reference':'job_ref'}
+        to_date = ['closes', 'placed_on']
         heads = response.xpath('//td[@class="detail-heading"]/text()').extract()
         ans = response.xpath('//td[not(@class="detail-heading")]/text()').extract()
         answers = []
@@ -63,14 +66,19 @@ class MySpider(scrapy.spiders.CrawlSpider):
 
         # Strip the answers list of whitespace and put spaces in between
         for i in ans:
-             remove = sub('\s+', ' ', i)
-             answers.append(remove.strip())
+            remove = sub('\s+', ' ', i)
+            answers.append(remove.strip())
 
         # Strip headings of all spacing, replacing with nothing
         for i in heads:
-            i = i.lower()
-            remove = sub('\s+', '_', i)
-            headings.append(remove.replace(":", ''))
+            i_lower = i.lower()
+            remove = sub('\s+', '_', i_lower)
+            remove = remove.replace(":", '')
+            if remove in duplicates:
+                remove = duplicates[remove]
+            if remove in to_date:
+                answers[heads.index(i)] = parse(answers[heads.index(i)])
+            headings.append(remove)
 
         # Make each heading the key to item and the answers the values
 
@@ -80,9 +88,8 @@ class MySpider(scrapy.spiders.CrawlSpider):
         item['text'] = response.xpath('//p/text()').extract()
         boxes = response.xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "j-nav-pill-box__link--label", " " ))]/text()').extract()
         item['job_type'] = boxes[0]
-        item['subject_area']= boxes[1:]
+        item['main_subject'] = boxes[1]
+        item['subject_area']= boxes[2:]
         item['active'] = True
-
-
 
         return item
