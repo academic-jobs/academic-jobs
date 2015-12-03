@@ -145,22 +145,19 @@ class JobsPipeline(object):
 
     def process_item(self, item, spider):
         active = item['active']
-        closes = item['active']
-        closes_on = item['active']
-        contract_type = item['active']
-        details = item['active']
-        expires = item['active']
-        funding_amount = item['active']
-        funding_for = item['active']
-        job_ref = item['active']
+        closes = item['closes']
+        contract_type = item['contract_type']
+        details = item['details']
+        funding_amount = item['funding_amount']
+        funding_for = item['funding_for']
+        job_ref = item['job_ref']
         # job_type is not from the details box
-        job_type = item['active']
-        hours = item['active']
+        job_type = item['job_type']
+        hours = item['hours']
 
-        location = item['active']
-        placed_on = item['active']
-        qualification_type = item['active']
-        reference = item['active']
+        location = item['location']
+        placed_on = item['placed_on']
+        qualification_type = item['qualification_type']
 
         salary = item['active']
         subject_area = item['active']
