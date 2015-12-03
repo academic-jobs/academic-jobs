@@ -10,6 +10,7 @@ from re import sub
 
 class JobsItem(scrapy.Item):
     # define the fields for your item here like:
+    active = scrapy.Field()
     closes = scrapy.Field()
     closes_on = scrapy.Field()
     contract_type = scrapy.Field()
@@ -80,6 +81,7 @@ class MySpider(scrapy.spiders.CrawlSpider):
         boxes = response.xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "j-nav-pill-box__link--label", " " ))]/text()').extract()
         item['job_type'] = boxes[0]
         item['subject_area']= boxes[1:]
+        item['active'] = True
 
 
 

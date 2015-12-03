@@ -2,7 +2,10 @@
 *.doc
 *.docx
 *.xlsx
-
+*ps.pub
+*ps
+*.DS_Store
+new.tex
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
