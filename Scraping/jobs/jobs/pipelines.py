@@ -133,7 +133,8 @@ class JobsPipeline(object):
                 else:
                     col2 = 'main_sub'
 
-                cursor.execute("INSERT INTO %s (%s) VALUES('%s')", (table, col2, self.connection.escape_string(name)))
+                sql = "INSERT INTO %s (%s) VALUES('%s')" % (table, col2, self.connection.escape_string(name))
+                cursor.execute(sql)
 
                 row_id = cursor.lastrowid
         except Exception:
@@ -185,7 +186,7 @@ class JobsPipeline(object):
         else:
             uni_id = self.insert_uni_sub('university', item_dict['university'])
 
-        new_dict['uni_id'] = uni_id
+        new_dict['uni_id'] = str(uni_id)
 
         # Check if the item is in dict_of_subs
         if item_dict['main_subject'].lower() in self.dict_of_subs:
@@ -193,7 +194,7 @@ class JobsPipeline(object):
         else:
             main_sub_id = self.insert_uni_sub('subject', item_dict['main_subject'])
 
-        new_dict['main_sub_id'] = main_sub_id
+        new_dict['main_sub_id'] = str(main_sub_id)
 
         self.get_unis_subs(self.uni_update, self.sub_update)
 
@@ -205,7 +206,8 @@ class JobsPipeline(object):
         col = tuple(str(i) for i in col)
         col = "(%s)" % (",".join(col))
 
-        val = tuple(self.connection.escape_string(i[1]) for i in new_dict.items())
+        val = [self.connection.escape_string(i[1]) for i in new_dict.items()]
+        val = tuple(val)
 
         val = repr(val)
         val = val.replace("u'", "'")
@@ -213,13 +215,14 @@ class JobsPipeline(object):
 
         try:
             with self.connection.cursor() as cursor:
-                cursor.execute("INSERT INTO jobs %s VALUES %s", (col,val))
+                sql = "INSERT INTO jobs %s VALUES %s" % (col,val)
+                cursor.execute(sql)
         except Exception:
             print("Oops. Either the connection is bad, or your sql didn't "
                   "work, or you don't have the right "
                   "permissions")
             traceback.print_exc()
-            print("INSERT INTO jobs %s VALUES %s" % (col,val))
+            print(sql)
 
         return item
 

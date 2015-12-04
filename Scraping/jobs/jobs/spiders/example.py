@@ -54,7 +54,6 @@ class MySpider(scrapy.spiders.CrawlSpider):
     def parse_item(self, response):
 
         item = JobsItem()
-        item['title'] = response.xpath('//h1/text()').extract()[0]
 
         try:
             item['university'] = response.xpath('//h3//strong/text()').extract()[0]
@@ -62,6 +61,8 @@ class MySpider(scrapy.spiders.CrawlSpider):
             print("Could not find university for {}".format(response.url))
             return None
 
+        item['title'] = response.xpath('//h1/text()').extract()[0]
+        
         item['url'] = response.url
         duplicates = {'closes_on':'closes',
                       'expires':'closes',
@@ -110,6 +111,6 @@ class MySpider(scrapy.spiders.CrawlSpider):
         item['subject_area']= ",".join(boxes[2:])
         # MySQL uses tiny int so it can either be zero or 1
         # this means any bool (like active) needs to be zero or 1.
-        item['active'] = 1
+        item['active'] = str(1)
 
         return item
