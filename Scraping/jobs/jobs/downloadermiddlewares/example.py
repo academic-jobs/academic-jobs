@@ -1,6 +1,7 @@
 from scrapy.exceptions import IgnoreRequest
 from pymysql import cursors, connect
 from itertools import chain
+import traceback
 
 # This class doesn't inherit from any base class - there are ones already created
 # for custom uses like cookies etc. but no base class!
@@ -17,7 +18,10 @@ class MyCustomDownloaderMiddleware:
                              user = 'olivia',
                              password = 'owilsoli',
                              db = 'academic',
-                             charset = 'utf8mb4')
+                             charset = 'utf8mb4',
+                             autocommit = True)
+
+        list_of_urls = []
         try:
             with connection.cursor() as cursor:
                 # query the jobs table
@@ -25,9 +29,15 @@ class MyCustomDownloaderMiddleware:
                 cursor.execute(sql)
                 list_of_urls = cursor.fetchall()
                 list_of_urls = list(chain.from_iterable(list_of_urls))
+        except Exception:
+            print("Oops. Either the connection is bad, or your sql didn't "
+                  "work, or you don't have the right "
+                  "permissions")
+            traceback.print_exc()
+            print(sql)
         finally:
             connection.close()
-        return list_of_urls if list_of_urls else None
+        return list_of_urls
 
     def process_request(self, request, spider):
         if request.url in self.list_of_urls:
