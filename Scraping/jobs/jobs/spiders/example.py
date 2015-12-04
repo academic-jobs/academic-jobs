@@ -55,8 +55,8 @@ class MySpider(scrapy.spiders.CrawlSpider):
 
         item = JobsItem()
         try:
-            item['title'] = str(response.xpath('//h1/text()').extract()[0])
-            item['university'] = str(response.xpath('//h3//strong/text()').extract()[0])
+            item['title'] = response.xpath('//h1/text()').extract()[0]
+            item['university'] = response.xpath('//h3//strong/text()').extract()[0]
             item['url'] = response.url
             duplicates = {'closes_on':'closes',
                           'expires':'closes',
@@ -90,13 +90,13 @@ class MySpider(scrapy.spiders.CrawlSpider):
             # Make each heading the key to item and the answers the values
 
             for i in range(len(headings)):
-                item[headings[i]] = str(answers[i])
+                item[headings[i]] = answers[i]
 
-            item['text'] = str("\n".join(response.xpath('//p/text()').extract()))
+            item['text'] = "\n".join(response.xpath('//p/text()').extract())
             boxes = response.xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "j-nav-pill-box__link--label", " " ))]/text()').extract()
-            item['job_type'] = str(boxes[0])
-            item['main_subject'] = str(boxes[1])
-            item['subject_area']= str(",".join(boxes[2:]))
+            item['job_type'] = boxes[0]
+            item['main_subject'] = boxes[1]
+            item['subject_area']= ",".join(boxes[2:])
             # MySQL uses tiny int so it can either be zero or 1
             # this means any bool (like active) needs to be zero or 1.
             item['active'] = 1

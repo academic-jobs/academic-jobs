@@ -206,7 +206,7 @@ class JobsPipeline(object):
         col = tuple(i[0] for i in new_dict.items())
         col = tuple(str(i) for i in col)
         col = "(%s)" % (",".join(col))
-        val = tuple(i[1] for i in new_dict.items())
+        val = tuple(self.connection.escape_string(i[1]) for i in new_dict.items())
 
         try:
             with self.connection.cursor() as cursor:
