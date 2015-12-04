@@ -133,9 +133,7 @@ class JobsPipeline(object):
                 else:
                     col2 = 'main_sub'
 
-                sql = "INSERT INTO %s (%s) VALUES('%s')" % (table, col2, name)
-
-                cursor.execute(sql)
+                cursor.execute("INSERT INTO %s (%s) VALUES('%s')", (table, col2, self.connection.escape_string(name)))
 
                 row_id = cursor.lastrowid
         except Exception:
@@ -143,7 +141,7 @@ class JobsPipeline(object):
                   "work, or you don't have the right "
                   "permissions")
             traceback.print_exc()
-            print(sql)
+            print("INSERT INTO %s (%s) VALUES('%s')" % (table, col2, name))
             return None
 
         if table == 'university':
@@ -206,18 +204,22 @@ class JobsPipeline(object):
         col = tuple(i[0] for i in new_dict.items())
         col = tuple(str(i) for i in col)
         col = "(%s)" % (",".join(col))
+
         val = tuple(self.connection.escape_string(i[1]) for i in new_dict.items())
+
+        val = repr(val)
+        val = val.replace("u'", "'")
+        val = val.replace('u"', '"')
 
         try:
             with self.connection.cursor() as cursor:
-                sql = "INSERT INTO jobs %s VALUES %s" % (col, repr(val))
-                cursor.execute(sql)
+                cursor.execute("INSERT INTO jobs %s VALUES %s", (col,val))
         except Exception:
             print("Oops. Either the connection is bad, or your sql didn't "
                   "work, or you don't have the right "
                   "permissions")
             traceback.print_exc()
-            print(sql)
+            print("INSERT INTO jobs %s VALUES %s" % (col,val))
 
         return item
 
