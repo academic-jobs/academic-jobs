@@ -1,0 +1,77 @@
+name: academic
+dependencies:
+- anaconda-client
+- binstar
+- cffi
+- clyent
+- cryptography
+- cssselect
+- decorator
+- enum34
+- freetype
+- idna
+- ipaddress
+- ipykernel
+- ipython
+- ipython-qtconsole
+- ipython_genutils
+- jbig
+- jpeg
+- jupyter_client
+- jupyter_core
+- libpng
+- libtiff
+- libxml2
+- libxslt
+- lxml
+- matplotlib
+- nose
+- numpy
+- openssl
+- path.py
+- pexpect
+- pickleshare
+- pillow
+- pip
+- pyasn1
+- pycparser
+- pygments
+- pymysql
+- pyopenssl
+- pyparsing
+- pyqt
+- python
+- python-dateutil
+- pytz
+- pyyaml
+- pyzmq
+- qt
+- qtconsole
+- queuelib
+- readline
+- requests
+- scipy
+- scrapy
+- setuptools
+- simplegeneric
+- sip
+- six
+- sqlite
+- tk
+- traitlets
+- twisted
+- w3lib
+- wheel
+- xz
+- yaml
+- zeromq
+- zlib
+- zope.interface
+- pip:
+  - characteristic
+  - ipython-genutils
+  - jupyter-client
+  - jupyter-core
+  - pyasn1-modules
+  - service-identity
+            
