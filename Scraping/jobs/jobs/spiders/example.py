@@ -44,7 +44,7 @@ class MySpider(scrapy.spiders.CrawlSpider):
     start_urls = ['http://www.jobs.ac.uk/']
     rules = (
             Rule(LinkExtractor(allow=('/jobs/', ))),
-            Rule(LinkExtractor(allow=('/search/',))),
+            Rule(LinkExtractor(allow=('/search',))),
 
             # Extract links matching 'item.php' and parse them with the spider's
             # method parse_item
