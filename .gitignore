@@ -5,7 +5,10 @@
 *ps.pub
 *ps
 *.DS_Store
-new.tex
+*.txt
+*.sql
+*.csv
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
