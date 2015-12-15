@@ -220,7 +220,7 @@ class REFPipeline(object):
             traceback.print_exc()
             print(sql)
 
-        return item
+        return item_dict
 
 
     def read_csv(self, filename):
@@ -233,36 +233,24 @@ class REFPipeline(object):
             # All cases where the length of a row isn't 6 will be ignored as will
             # any that cause byte errors
             for index, line in enumerate(f.readlines()):
-                try:
-                    line = line.decode('utf-8')
-                    line = line.strip()
-                    s = line.split(',')
-                    if len(s) > 8:
-                        continue
-                    else:
-                        result = {}
-                        try:
-                            result['university'] = s[0]
-                            result['ref_dept_name'] = s[1]
-                            result['staffFTE'] = s[2]
-                            result['fourstar'] = s[3]
-                            result['threestar'] = s[4]
-                            result['twostar'] = s[5]
-                            result['onestar'] = s[6]
-                            result['unclassified'] = s[7]
 
-                        except Exception:
-                            # If it got this far then there were more than 6 elements
-                            # in the data.
-                            #print("Did not load this item into the list. "
-                            #" It was row {}".format(index))
-                            bad_rows += 1
-                            continue
-                        list_of_dicts.append(result)
-                except Exception:
-                    #print('It went wrong after line {}'.format(line))
-                    bad_rows += 1
-                    continue
+                line = line.decode('utf-8')
+                line = line.strip()
+                s = line.split(',')
+
+                result = {}
+
+                result['university'] = s[0]
+                result['ref_dept_name'] = s[1]
+                result['staffFTE'] = s[2]
+                result['fourstar'] = s[3]
+                result['threestar'] = s[4]
+                result['twostar'] = s[5]
+                result['onestar'] = s[6]
+                result['unclassified'] = s[7]
+
+                list_of_dicts.append(result)
+
         return list_of_dicts, bad_rows
 
 
@@ -276,7 +264,6 @@ class REFPipeline(object):
 
         for i in list_of_dicts:
             item = self.process_item(i)
-            print(item)
 
 
 if __name__ == '__main__':
