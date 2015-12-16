@@ -268,4 +268,4 @@ class REFPipeline(object):
 
 if __name__ == '__main__':
     ref_pipeline = REFPipeline()
-    # ref_pipline.run()
+    ref_pipeline.run("REF2014.csv")
