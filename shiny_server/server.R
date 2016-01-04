@@ -56,7 +56,7 @@ shinyServer(function(input, output) {
       layer_points() %>%
       add_tooltip(tooltip, "hover")%>%
       add_axis("x", title = "REF score") %>%
-      add_axis("y", title = "Count of jobs per Unit of Assessment")
+      add_axis("y", title = "Count of jobs")
   }) %>% bind_shiny("plot", "plot_ui")
 
   # tabPanel Jobs by department
@@ -74,7 +74,7 @@ shinyServer(function(input, output) {
               names.arg = count_for_uni_by_subj$main_sub,
               las=2,
               xlab = "",
-              ylab = "Count of jobs per university")
+              ylab = "Count of jobs")
     } else {
       x <- c(0)
       y <- c(0)
@@ -152,6 +152,21 @@ shinyServer(function(input, output) {
       layer_points() %>%
       add_tooltip(tooltip2, "hover") %>%
       add_axis("x", title = "REF Unit of Assesment") %>%
-      add_axis("y", title = "Score per Unit of Assessment") 
+      add_axis("y", title = "REF Score") 
   })%>% bind_shiny("plot_ref", "plot_ref_ui")
+  
+  # tabPanel Top ten Universities
+  output$table_tt <- renderDataTable({
+    if(input$top_ten=="Top ten hirers") {
+      top_ten <- group_by(jobs_tbl, uni_id) %>%
+                 summarise(job_count=n()) %>%
+                 arrange(desc(job_count)) %>%
+                 head(n=10) %>%
+                 inner_join(unis_tbl, by = c("uni_id" = "id")) %>%
+                 select(uni_name = "University", job_count = "Count of Jobs")%>%
+                 collect()
+    } else {
+      
+    }
+  })
 })

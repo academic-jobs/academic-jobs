@@ -45,6 +45,8 @@ df_uni <- as.data.frame(unis_tbl) %>%
           arrange(uni_name)
 new_df_uni <- setNames(as.list(df_uni$id), df_uni$uni_name)
 
+top10_choice <- c("Top ten hirers", "Top ten REF scores")
+
 shinyUI(fluidPage(
   
   # Application title
@@ -53,7 +55,7 @@ shinyUI(fluidPage(
   tabsetPanel(
     tabPanel("REF vs job counts by subject",
              sidebarPanel(
-               selectInput("ref_dept", "Unit of Assessment:", choices=new_df),
+               selectInput("ref_dept", "Unit of Assessment:", choices=new_df, selected=NULL),
                checkboxInput("norm", "Normalise by FTE", value=FALSE),
                uiOutput('plot_ui')
              ),
@@ -76,8 +78,7 @@ shinyUI(fluidPage(
     
     tabPanel("Jobs by department",
              sidebarPanel(
-               selectInput("uni", "University:", 
-                           choices=new_df_uni)
+               selectInput("uni", "University:", choices=new_df_uni, selected=NULL)
              ),
              
              # Show a plot of the generated distribution
@@ -93,8 +94,27 @@ shinyUI(fluidPage(
              # Show a plot of the generated distributio
              mainPanel(
                ggvisOutput("plot_ref")
-             )
-    )
+             )),
+    
+    tabPanel("Top ten Universities by subject",
+             sidebarPanel(
+               selectInput("top_ten_sub", "Top ten type", choices=top10_choice),
+               selectInput("ref_dept_tt", "Unit of Assessment:", choices=new_df)
+             ),
+             
+             # Show a plot of the generated distributio
+             mainPanel(
+               tableOutput("table_tt_sub")
+             )),
+    tabPanel("Top ten Universities",
+             sidebarPanel(
+               selectInput("top_ten", "Top ten type", choices=top10_choice)
+             ),
+             
+             # Show a plot of the generated distributio
+             mainPanel(
+               tableOutput("table_tt")
+             ))
   )
 )
 )
