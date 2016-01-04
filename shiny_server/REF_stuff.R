@@ -55,3 +55,57 @@ tooltip <- function(x) {
 ref_by_job_count %>% ggvis(x = ~score, y = ~job_count, key := ~uni_id) %>%
   layer_points() %>%
   add_tooltip(tooltip, "hover")
+
+##################################################################################################
+
+library(shiny)
+library(dplyr)
+
+
+Sys.setlocale('LC_ALL','C') 
+
+# Get unis list, and convert to 'dict-style' list from uni name (key)
+# to id (value)
+my_db <- src_mysql('academic', user="jobs_update", password="DataScienceAcc1516", host="127.0.0.1", port=1234)
+unis <- tbl(my_db, 'university')
+df <- as.data.frame(unis)
+new_df <- setNames(as.list(df$id), df$uni_name)
+
+shinyUI(fluidPage(
+  # Application title
+  headerPanel("Test Multiple Pages"),
+  
+  tabsetPanel(
+    tabPanel("Jobs by department",
+             sidebarPanel(
+               selectInput("uni", "University:", 
+                           choices=new_df)
+             ),
+             
+             # Show a plot of the generated distributio
+             mainPanel(
+               plotOutput("distPlot")
+             )),
+    
+    tabPanel("New cool thing",
+             # Define the sidebar with one input
+             sidebarPanel(
+               selectInput("region", "Region:", 
+                           choices=colnames(WorldPhones)),
+               hr(),
+               helpText("Data from AT&T (1961) The World's Telephones.")
+             ),
+             
+             # Create a spot for the barplot
+             mainPanel(
+               plotOutput("phonePlot")  
+             ))
+    
+    
+  )))
+
+
+
+
+
+

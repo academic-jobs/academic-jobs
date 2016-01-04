@@ -18,20 +18,46 @@ df <- arrange(ref_dept_tbl, ref_dept_name) %>%
       as.data.frame(ref_dept_tbl)
 new_df <- setNames(as.list(df$id), df$ref_dept_name)
 
-shinyUI(pageWithSidebar(
+df_uni <- as.data.frame(unis_tbl)
+new_df_uni <- setNames(as.list(df_uni$id), df_uni$uni_name)
+
+shinyUI(fluidPage(
   
   # Application title
-  headerPanel("Ref Score relationship with job count"),
+  headerPanel("REF data analysis against www.jobs.ac.uk"),
   
-  sidebarPanel(
-    selectInput("ref_dept", "Department:", 
-                choices=new_df),
-    checkboxInput("norm", "Normalise by FTE", value=FALSE),
-    uiOutput('plot_ui')
-  ),
-  
-  # Show a plot of the generated distributio
-  mainPanel(
-    ggvisOutput("plot")
+  tabsetPanel(
+    tabPanel("REF vs job counts by subject",
+             sidebarPanel(
+               selectInput("ref_dept", "Department:", choices=new_df),
+               checkboxInput("norm", "Normalise by FTE", value=FALSE),
+               uiOutput('plot_ui')
+             ),
+             
+             # Show a plot of the generated distributio
+             mainPanel(
+               ggvisOutput("plot")
+             )),
+    
+    tabPanel("Jobs by department",
+             sidebarPanel(
+               selectInput("uni", "University:", 
+                           choices=new_df_uni)
+             ),
+             
+             # Show a plot of the generated distribution
+             mainPanel(
+               plotOutput("jobsDeptPlot")
+             )),
+    tabPanel("REF vs job counts All",
+             sidebarPanel(
+               checkboxInput("norm_all", "Normalise by FTE", value=FALSE),
+               uiOutput('plot_all_ui')
+             ),
+             
+             # Show a plot of the generated distributio
+             mainPanel(
+               ggvisOutput("plot_all")
+             ))
   )
 ))
