@@ -17,6 +17,7 @@ jobs_sub_ref <- left_join(jobs_tbl, sub_ref_tbl, by = c('main_sub_id' = 'main_su
 
 shinyServer(function(input, output) {
   
+  # tabPanel REF vs job counts by subject
   reactive( {
     
     norm_by_FTE = input$norm
@@ -47,19 +48,18 @@ shinyServer(function(input, output) {
     # Standard R plotting in case interactive plotting doesn't work
     # plot(ref_by_job_count$score, ref_by_job_count$job_count)
     
-    # Before we plot, check to see if there is no data...and if so then don't plot
-    # and ideally give an message or a blank plot or some such jazz
-    
     tooltip <- function(x) {
       return(x$uni_name)
     }
     
-    # TODO: Add nice axis labels
     ref_by_job_count %>% collect() %>% ggvis(x = ~score, y = ~job_count, key := ~uni_name) %>%
       layer_points() %>%
-      add_tooltip(tooltip, "hover") }) %>%
-    bind_shiny("plot", "plot_ui")
+      add_tooltip(tooltip, "hover")%>%
+      add_axis("x", title = "REF score") %>%
+      add_axis("y", title = "Count of jobs per Unit of Assessment")
+  }) %>% bind_shiny("plot", "plot_ui")
 
+  # tabPanel Jobs by department
   output$jobsDeptPlot <- renderPlot({
     count_for_uni_by_subj = filter(jobs_tbl, uni_id == input$uni) %>%
                             group_by(main_sub_id) %>%
@@ -68,11 +68,22 @@ shinyServer(function(input, output) {
                             select(main_sub, count) %>%
                             collect()
     
-    op <- par(mar = c(20,4,4,2) + 0.1)
-    barplot(as.vector(count_for_uni_by_subj$count), names.arg = count_for_uni_by_subj$main_sub, las=2)
+    if(nrow(count_for_uni_by_subj)!=0) {
+      op <- par(mar = c(20,4,4,2) + 0.1)
+      barplot(as.vector(count_for_uni_by_subj$count),
+              names.arg = count_for_uni_by_subj$main_sub,
+              las=2,
+              xlab = "",
+              ylab = "Count of jobs per university")
+    } else {
+      x <- c(0)
+      y <- c(0)
+      plot(x, y, xaxt='n', yaxt='n', ann=FALSE, col="red")
+      title(main="There is no data for this university", col.main="red", font.main=30)}
     
   }, height = 600, width = 'auto')
   
+  # tabPanel REF vs job counts All
   reactive( {
     
     norm_by_FTE = input$norm_all
@@ -101,21 +112,21 @@ shinyServer(function(input, output) {
     # Standard R plotting in case interactive plotting doesn't work
     # plot(ref_by_job_count$score, ref_by_job_count$job_count)
     
-    # Before we plot, check to see if there is no data...and if so then don't plot
-    # and ideally give an message or a blank plot or some such jazz
-    
     tooltip <- function(x) {
       return(x$uni_name)
     }
     
-    # TODO: Add nice axis labels
+    # Calculated using the formula: number of (4*x4 + 3*x3 + 2*x2 + 1*x1 - unclassified) / FTE x (4*+3*+2*+1*)
     ref_by_job_count %>% collect() %>% ggvis(x = ~score, y = ~job_count, key := ~uni_name) %>%
       layer_points() %>%
-      add_tooltip(tooltip, "hover") }) %>%
+      add_tooltip(tooltip, "hover") %>%
+      add_axis("x", title = "REF score") %>%
+      add_axis("y", title = "Count of jobs") }) %>%
     bind_shiny("plot_all", "plot_all_ui")
   
+  # tabPanel REF by subject
   reactive( {
-    
+    norm_by_FTE <- input$norm_ref
     ref_for_subj_tmp = group_by(ref_tbl, ref_dept_id) %>%
       summarise(tot_FTE=sum(staffFTE), tot_4star=sum(fourstar), tot_3star=sum(threestar), tot_2star=sum(twostar), tot_1star=sum(onestar), tot_un=sum(unclassified))
     
@@ -133,15 +144,14 @@ shinyServer(function(input, output) {
     # Standard R plotting in case interactive plotting doesn't work
     # plot(ref_by_job_count$score, ref_by_job_count$job_count)
     
-    # Before we plot, check to see if there is no data...and if so then don't plot
-    # and ideally give an message or a blank plot or some such jazz
-    
     tooltip2 <- function(x) {
       return(x$ref_dept_name)
     }
     
-    # TODO: Add nice axis labels
     ref_for_subj %>% ggvis(x = ~ref_dept_id, y = ~score, key := ~ref_dept_name) %>%
       layer_points() %>%
-      add_tooltip(tooltip2, "hover") })%>% bind_shiny("plot_ref", "plot_ref_ui")
+      add_tooltip(tooltip2, "hover") %>%
+      add_axis("x", title = "REF Unit of Assesment") %>%
+      add_axis("y", title = "Score per Unit of Assessment") 
+  })%>% bind_shiny("plot_ref", "plot_ref_ui")
 })

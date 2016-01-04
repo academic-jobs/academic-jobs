@@ -43,9 +43,9 @@ all_values <- function(x) {
 
 tooltip <- function(x) {
   if(is.null(x)) return(NULL)
-  
+
   row <- ref_by_job_count[ref_by_job_count$uni_id == x$uni_id, ]
-  
+
   return(row$uni_name)
 }
 
@@ -53,7 +53,7 @@ ref_by_job_count %>% ggvis(x = ~score, y = ~job_count, key := ~uni_id) %>%
   layer_points() %>%
   add_tooltip(tooltip, "hover")
 
-##################################################################################################
+################################################################################
 ref_for_subj_tmp = group_by(ref_tbl, ref_dept_id) %>%
   summarise(tot_FTE=sum(staffFTE), tot_4star=sum(fourstar), tot_3star=sum(threestar), tot_2star=sum(twostar), tot_1star=sum(onestar), tot_un=sum(unclassified))
 
@@ -62,8 +62,8 @@ if(norm_by_FTE){
 } else{
   ref_for_subj_tmp2 <- mutate(ref_for_subj_tmp, score = (tot_4star*4 + tot_3star*3 + tot_2star*2 + tot_1star -tot_un)/(tot_4star+tot_3star+tot_2star+tot_1star+tot_un))}
 
-ref_for_subj <- select(ref_for_subj_tmp2, ref_dept_id, score) %>% 
-                left_join(ref_dept_tbl, by = c("ref_dept_id" = "id")) %>%           
+ref_for_subj <- select(ref_for_subj_tmp2, ref_dept_id, score) %>%
+                left_join(ref_dept_tbl, by = c("ref_dept_id" = "id")) %>%
                 collect()
 
 tooltip2 <- function(x) {
@@ -74,13 +74,13 @@ ref_for_subj %>% ggvis(x = ~ref_dept_id, y = ~score, key := ~ref_dept_name) %>%
   layer_points() %>%
   add_tooltip(tooltip2, "hover")
 
-##################################################################################################
+################################################################################
 
 library(shiny)
 library(dplyr)
 
 
-Sys.setlocale('LC_ALL','C') 
+Sys.setlocale('LC_ALL','C')
 
 # Get unis list, and convert to 'dict-style' list from uni name (key)
 # to id (value)
@@ -92,38 +92,60 @@ new_df <- setNames(as.list(df$id), df$uni_name)
 shinyUI(fluidPage(
   # Application title
   headerPanel("Test Multiple Pages"),
-  
+
   tabsetPanel(
     tabPanel("Jobs by department",
              sidebarPanel(
-               selectInput("uni", "University:", 
+               selectInput("uni", "University:",
                            choices=new_df)
              ),
-             
+
              # Show a plot of the generated distributio
              mainPanel(
                plotOutput("distPlot")
              )),
-    
+
     tabPanel("New cool thing",
              # Define the sidebar with one input
              sidebarPanel(
-               selectInput("region", "Region:", 
+               selectInput("region", "Region:",
                            choices=colnames(WorldPhones)),
                hr(),
                helpText("Data from AT&T (1961) The World's Telephones.")
              ),
-             
+
              # Create a spot for the barplot
              mainPanel(
-               plotOutput("phonePlot")  
+               plotOutput("phonePlot")
              ))
-    
-    
+
+
   )))
 
+################################################################################
+# Top ten unis for x
 
+# For the ui need to create manual
 
-
-
-
+# REF departments without any link to subject_area
+# 6, 14 17 18 19# 20# 21# 23# 25# 28# 29# 30# 31# 32# 33# 34# 36
+ref_dept_id = c(1,2,3,4,5,7,8,9,10,11,12,13,15,16,22,24,26,27,35)
+ref_dept_name = c("Allied Health Professions Dentistry Nursing and Pharmacy",
+                  "Psychology Psychiatry and Neuroscience",
+                  "Biological Sciences",
+                  "General Engineering",
+                  "Architecture Built Environment and Planning",
+                  "Business and Management Studies",
+                  "Law",
+                  "Social Work and Social Policy",
+                  "Education",
+                  "English Language and Literature",
+                  "History",
+                  "Art and Design: History Practice and Theory",
+                  "Communication Cultural and Media Studies Library and Information Management",
+                  "Computer Science and Informatics",
+                  "Mathematical Sciences",
+                  "Sport and Exercise Sciences Leisure and Tourism",
+                  "Economics and Econometrics",
+                  "Politics and International Studies",
+                  "Agriculture Veterinary and Food Science")

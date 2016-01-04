@@ -14,11 +14,35 @@ ref_dept_tbl <- tbl(my_db,'ref_dept')
 sub_ref_tbl <- tbl(my_db, 'subject-ref') %>%
   select(ref_dept_id1, main_sub = main_sub_id)
 
-df <- arrange(ref_dept_tbl, ref_dept_name) %>%
-      as.data.frame(ref_dept_tbl)
-new_df <- setNames(as.list(df$id), df$ref_dept_name)
+ref_dept_id = c(1,2,3,4,5,7,8,9,10,11,12,13,15,16,22,24,26,27,35)
+ref_dept_name = c("Allied Health Professions Dentistry Nursing and Pharmacy",
+                  "Psychology Psychiatry and Neuroscience",
+                  "Biological Sciences",
+                  "General Engineering",
+                  "Architecture Built Environment and Planning",
+                  "Business and Management Studies",
+                  "Law",
+                  "Social Work and Social Policy",
+                  "Education",
+                  "English Language and Literature",
+                  "History",
+                  "Art and Design: History Practice and Theory",
+                  "Communication Cultural and Media Studies Library and Information Management",
+                  "Computer Science and Informatics",
+                  "Mathematical Sciences",
+                  "Sport and Exercise Sciences Leisure and Tourism",
+                  "Economics and Econometrics",
+                  "Politics and International Studies",
+                  "Agriculture Veterinary and Food Science")
 
-df_uni <- as.data.frame(unis_tbl)
+df <- data.frame(ref_dept_id, ref_dept_name)
+
+df <- arrange(df, ref_dept_name) %>%
+      as.data.frame()
+new_df <- setNames(as.list(df$ref_dept_id), df$ref_dept_name)
+
+df_uni <- as.data.frame(unis_tbl) %>%
+          arrange(uni_name)
 new_df_uni <- setNames(as.list(df_uni$id), df_uni$uni_name)
 
 shinyUI(fluidPage(
@@ -29,7 +53,7 @@ shinyUI(fluidPage(
   tabsetPanel(
     tabPanel("REF vs job counts by subject",
              sidebarPanel(
-               selectInput("ref_dept", "Department:", choices=new_df),
+               selectInput("ref_dept", "Unit of Assessment:", choices=new_df),
                checkboxInput("norm", "Normalise by FTE", value=FALSE),
                uiOutput('plot_ui')
              ),
@@ -37,6 +61,17 @@ shinyUI(fluidPage(
              # Show a plot of the generated distributio
              mainPanel(
                ggvisOutput("plot")
+             )),
+    
+    tabPanel("REF vs job counts All",
+             sidebarPanel(
+               checkboxInput("norm_all", "Normalise by FTE", value=FALSE),
+               uiOutput('plot_all_ui')
+             ),
+             
+             # Show a plot of the generated distributio
+             mainPanel(
+               ggvisOutput("plot_all")
              )),
     
     tabPanel("Jobs by department",
@@ -49,16 +84,6 @@ shinyUI(fluidPage(
              mainPanel(
                plotOutput("jobsDeptPlot")
              )),
-    tabPanel("REF vs job counts All",
-             sidebarPanel(
-               checkboxInput("norm_all", "Normalise by FTE", value=FALSE),
-               uiOutput('plot_all_ui')
-             ),
-             
-             # Show a plot of the generated distributio
-             mainPanel(
-               ggvisOutput("plot_all")
-             )),
     tabPanel("REF by subject",
              sidebarPanel(
                checkboxInput("norm_ref", "Normalise by FTE", value=FALSE),
@@ -68,5 +93,8 @@ shinyUI(fluidPage(
              # Show a plot of the generated distributio
              mainPanel(
                ggvisOutput("plot_ref")
-  ))
-)))
+             )
+    )
+  )
+)
+)
