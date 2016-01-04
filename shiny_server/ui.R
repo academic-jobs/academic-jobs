@@ -58,6 +58,15 @@ shinyUI(fluidPage(
              # Show a plot of the generated distributio
              mainPanel(
                ggvisOutput("plot_all")
-             ))
-  )
-))
+             )),
+    tabPanel("REF by subject",
+             sidebarPanel(
+               checkboxInput("norm_ref", "Normalise by FTE", value=FALSE),
+               uiOutput('plot_ref_ui')
+             ),
+             
+             # Show a plot of the generated distributio
+             mainPanel(
+               ggvisOutput("plot_ref")
+  ))
+)))

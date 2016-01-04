@@ -6,6 +6,7 @@ ref_tbl <- tbl(my_db, 'ref')
 jobs_tbl <- tbl(my_db, 'jobs')
 sub_ref_tbl <- tbl(my_db, 'subject-ref') %>%
                select(ref_dept_id1, main_sub = main_sub_id)
+ref_dept_tbl <- tbl(my_db, 'ref_dept')
 norm_by_FTE <- FALSE
 
 # Join the jobs table with the subject-ref table using main_sub_id as the joining key.
@@ -19,8 +20,6 @@ count_for_uni_by_subj = # filter(job_sub_ref, ref_dept_id == 3) %>%
                         summarise(job_count=n()) %>%
                         select(uni_id, job_count)
 
-
-
 #filter(ref_tbl, ref_dept_id == 3) %>%
 ref_by_subj_tmp <- group_by(ref_tbl, uni_id) %>%
                    summarise(tot_FTE = sum(staffFTE), tot_4star=sum(fourstar), tot_3star=sum(threestar), tot_2star=sum(twostar), tot_1star=sum(onestar), tot_un=sum(unclassified))
@@ -29,8 +28,6 @@ if(norm_by_FTE){
   ref_by_subj_tmp2 <- mutate(ref_by_subj_tmp, score = ((tot_4star*4 + tot_3star*3 + tot_2star*2 + tot_1star -tot_un)/(tot_4star+tot_3star+tot_2star+tot_1star+tot_un))/tot_FTE)
   } else{
       ref_by_subj_tmp2 <- mutate(ref_by_subj_tmp, score = (tot_4star*4 + tot_3star*3 + tot_2star*2 + tot_1star -tot_un)/(tot_4star+tot_3star+tot_2star+tot_1star+tot_un))}
-
-ref_by_subj <- select(ref_by_subj_tmp2, uni_id, score)
 
 # Need to join the jobs and the uni data
 ref_by_job_count <- inner_join(count_for_uni_by_subj, ref_by_subj, by = c('uni_id' = 'uni_id')) %>%
@@ -55,6 +52,27 @@ tooltip <- function(x) {
 ref_by_job_count %>% ggvis(x = ~score, y = ~job_count, key := ~uni_id) %>%
   layer_points() %>%
   add_tooltip(tooltip, "hover")
+
+##################################################################################################
+ref_for_subj_tmp = group_by(ref_tbl, ref_dept_id) %>%
+  summarise(tot_FTE=sum(staffFTE), tot_4star=sum(fourstar), tot_3star=sum(threestar), tot_2star=sum(twostar), tot_1star=sum(onestar), tot_un=sum(unclassified))
+
+if(norm_by_FTE){
+  ref_for_subj_tmp2 <- mutate(ref_for_subj_tmp, score = ((tot_4star*4 + tot_3star*3 + tot_2star*2 + tot_1star -tot_un)/(tot_4star+tot_3star+tot_2star+tot_1star+tot_un))/tot_FTE)
+} else{
+  ref_for_subj_tmp2 <- mutate(ref_for_subj_tmp, score = (tot_4star*4 + tot_3star*3 + tot_2star*2 + tot_1star -tot_un)/(tot_4star+tot_3star+tot_2star+tot_1star+tot_un))}
+
+ref_for_subj <- select(ref_for_subj_tmp2, ref_dept_id, score) %>% 
+                left_join(ref_dept_tbl, by = c("ref_dept_id" = "id")) %>%           
+                collect()
+
+tooltip2 <- function(x) {
+  return(x$ref_dept_name)
+}
+
+ref_for_subj %>% ggvis(x = ~ref_dept_id, y = ~score, key := ~ref_dept_name) %>%
+  layer_points() %>%
+  add_tooltip(tooltip2, "hover")
 
 ##################################################################################################
 

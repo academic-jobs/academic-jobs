@@ -8,6 +8,8 @@ unis_tbl <- tbl(my_db, 'university')
 ref_tbl <- tbl(my_db, 'ref')
 jobs_tbl <- tbl(my_db, 'jobs')
 sub_tbl = tbl(my_db, 'subject')
+ref_dept_tbl <- tbl(my_db, 'ref_dept')
+
 sub_ref_tbl <- tbl(my_db, 'subject-ref') %>%
   select(ref_dept_id1, main_sub = main_sub_id)
 # Join the jobs table with the subject-ref table using main_sub_id as the joining key.
@@ -111,4 +113,35 @@ shinyServer(function(input, output) {
       layer_points() %>%
       add_tooltip(tooltip, "hover") }) %>%
     bind_shiny("plot_all", "plot_all_ui")
+  
+  reactive( {
+    
+    ref_for_subj_tmp = group_by(ref_tbl, ref_dept_id) %>%
+      summarise(tot_FTE=sum(staffFTE), tot_4star=sum(fourstar), tot_3star=sum(threestar), tot_2star=sum(twostar), tot_1star=sum(onestar), tot_un=sum(unclassified))
+    
+    if(norm_by_FTE){
+      ref_for_subj_tmp2 <- mutate(ref_for_subj_tmp, score = ((tot_4star*4 + tot_3star*3 + tot_2star*2 + tot_1star -tot_un)/(tot_4star+tot_3star+tot_2star+tot_1star+tot_un))/tot_FTE)
+    } else{
+      ref_for_subj_tmp2 <- mutate(ref_for_subj_tmp, score = (tot_4star*4 + tot_3star*3 + tot_2star*2 + tot_1star -tot_un)/(tot_4star+tot_3star+tot_2star+tot_1star+tot_un))}
+    
+    ref_for_subj <- select(ref_for_subj_tmp2, ref_dept_id, score) %>% 
+      left_join(ref_dept_tbl, by = c("ref_dept_id" = "id")) %>%           
+      collect()
+    
+    #browser()
+    
+    # Standard R plotting in case interactive plotting doesn't work
+    # plot(ref_by_job_count$score, ref_by_job_count$job_count)
+    
+    # Before we plot, check to see if there is no data...and if so then don't plot
+    # and ideally give an message or a blank plot or some such jazz
+    
+    tooltip2 <- function(x) {
+      return(x$ref_dept_name)
+    }
+    
+    # TODO: Add nice axis labels
+    ref_for_subj %>% ggvis(x = ~ref_dept_id, y = ~score, key := ~ref_dept_name) %>%
+      layer_points() %>%
+      add_tooltip(tooltip2, "hover") })%>% bind_shiny("plot_ref", "plot_ref_ui")
 })
