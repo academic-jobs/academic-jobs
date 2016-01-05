@@ -113,7 +113,7 @@ shinyUI(fluidPage(
              
              # Show a plot of the generated distributio
              mainPanel(
-               tableOutput("table_tt")
+               dataTableOutput("table_tt")
              ))
   )
 )

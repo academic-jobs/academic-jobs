@@ -156,15 +156,18 @@ shinyServer(function(input, output) {
   })%>% bind_shiny("plot_ref", "plot_ref_ui")
   
   # tabPanel Top ten Universities
+  
   output$table_tt <- renderDataTable({
     if(input$top_ten=="Top ten hirers") {
       top_ten <- group_by(jobs_tbl, uni_id) %>%
-                 summarise(job_count=n()) %>%
-                 arrange(desc(job_count)) %>%
-                 head(n=10) %>%
-                 inner_join(unis_tbl, by = c("uni_id" = "id")) %>%
-                 select(uni_name = "University", job_count = "Count of Jobs")%>%
-                 collect()
+        summarise(job_count=n()) %>%
+        arrange(desc(job_count)) %>%
+        head(n=10) %>%
+        inner_join(unis_tbl, by = c("uni_id" = "id"), copy=TRUE) %>%
+        select(University = uni_name, "Job Count" = job_count)%>%
+        as.data.frame() %>%
+        collect()
+  
     } else {
       top_ten <- group_by(ref_tbl, uni_id) %>%
         summarise(tot_4star=sum(fourstar), tot_3star=sum(threestar), tot_2star=sum(twostar), tot_1star=sum(onestar), tot_un=sum(unclassified)) %>%
@@ -172,8 +175,8 @@ shinyServer(function(input, output) {
         select(uni_id, score) %>%
         arrange(desc(score)) %>%
         head(n=10) %>%
-        inner_join(unis_tbl, by = c("uni_id" = "id")) %>%
-        select(uni_name = "University", job_count = "Count of Jobs")%>%
+        inner_join(unis_tbl, by = c("uni_id" = "id"), copy=TRUE) %>%
+        select(University = uni_name, "REF Score" = score)%>%
         collect()
     }
   })
