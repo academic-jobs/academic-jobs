@@ -3,7 +3,7 @@ library(dplyr)
 library(ggvis)
 #options(shiny.error = browser)
 
-my_db <- src_mysql('academic', user="jobs_update", password="DataScienceAcc1516", host="127.0.0.1", port=1234)
+my_db <- src_mysql('academic', user="jobs_update", password="DataScienceAcc1516", host="localhost")
 unis_tbl <- tbl(my_db, 'university')
 ref_tbl <- tbl(my_db, 'ref')
 jobs_tbl <- tbl(my_db, 'jobs')
@@ -158,7 +158,7 @@ shinyServer(function(input, output) {
   # tabPanel Top ten Universities
   
   output$table_tt <- renderDataTable({
-    if(input$top_ten=="Top ten hirers") {
+    if(input$top_ten=="By job count") {
       top_ten <- group_by(jobs_tbl, uni_id) %>%
         summarise(job_count=n()) %>%
         arrange(desc(job_count)) %>%
@@ -179,5 +179,5 @@ shinyServer(function(input, output) {
         select(University = uni_name, "REF Score" = score)%>%
         collect()
     }
-  })
+  }, options = list(paging = FALSE))
 })

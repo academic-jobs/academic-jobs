@@ -6,7 +6,7 @@ Sys.setlocale('LC_ALL','C')
 
 # Get unis list, and convert to 'dict-style' list from uni name (key)
 # to id (value)
-my_db <- src_mysql('academic', user="jobs_update", password="DataScienceAcc1516", host="127.0.0.1", port=1234)
+my_db <- src_mysql('academic', user="jobs_update", password="DataScienceAcc1516", host="localhost")
 unis_tbl <- tbl(my_db, 'university')
 ref_tbl <- tbl(my_db, 'ref')
 jobs_tbl <- tbl(my_db, 'jobs')
@@ -45,15 +45,25 @@ df_uni <- as.data.frame(unis_tbl) %>%
           arrange(uni_name)
 new_df_uni <- setNames(as.list(df_uni$id), df_uni$uni_name)
 
-top10_choice <- c("Top ten hirers", "Top ten REF scores")
+top10_choice <- c("By job count", "By REF scores")
 
 shinyUI(fluidPage(
   
   # Application title
-  headerPanel("REF data analysis against www.jobs.ac.uk"),
+  headerPanel("Academic job analysis"),
   
   tabsetPanel(
-    tabPanel("REF vs job counts by subject",
+    tabPanel("REF vs jobs (all)",
+             sidebarPanel(
+               checkboxInput("norm_all", "Normalise by FTE", value=FALSE),
+               uiOutput('plot_all_ui')
+             ),
+
+             # Show a plot of the generated distributio
+             mainPanel(
+               ggvisOutput("plot_all")
+             )),
+    tabPanel("REF vs jobs (by subject)",
              sidebarPanel(
                selectInput("ref_dept", "Unit of Assessment:", choices=new_df, selected=NULL),
                checkboxInput("norm", "Normalise by FTE", value=FALSE),
@@ -64,19 +74,7 @@ shinyUI(fluidPage(
              mainPanel(
                ggvisOutput("plot")
              )),
-    
-    tabPanel("REF vs job counts All",
-             sidebarPanel(
-               checkboxInput("norm_all", "Normalise by FTE", value=FALSE),
-               uiOutput('plot_all_ui')
-             ),
-             
-             # Show a plot of the generated distributio
-             mainPanel(
-               ggvisOutput("plot_all")
-             )),
-    
-    tabPanel("Jobs by department",
+        tabPanel("Jobs (by subject)",
              sidebarPanel(
                selectInput("uni", "University:", choices=new_df_uni, selected=NULL)
              ),
@@ -85,7 +83,7 @@ shinyUI(fluidPage(
              mainPanel(
                plotOutput("jobsDeptPlot")
              )),
-    tabPanel("REF by subject",
+    tabPanel("REF (by subject)",
              sidebarPanel(
                checkboxInput("norm_ref", "Normalise by FTE", value=FALSE),
                uiOutput('plot_ref_ui')
@@ -95,20 +93,9 @@ shinyUI(fluidPage(
              mainPanel(
                ggvisOutput("plot_ref")
              )),
-    
-    tabPanel("Top ten Universities by subject",
+tabPanel("Top ten universities",
              sidebarPanel(
-               selectInput("top_ten_sub", "Top ten type", choices=top10_choice),
-               selectInput("ref_dept_tt", "Unit of Assessment:", choices=new_df)
-             ),
-             
-             # Show a plot of the generated distributio
-             mainPanel(
-               tableOutput("table_tt_sub")
-             )),
-    tabPanel("Top ten Universities",
-             sidebarPanel(
-               selectInput("top_ten", "Top ten type", choices=top10_choice)
+               selectInput("top_ten", "Type", choices=top10_choice)
              ),
              
              # Show a plot of the generated distributio
