@@ -166,7 +166,15 @@ shinyServer(function(input, output) {
                  select(uni_name = "University", job_count = "Count of Jobs")%>%
                  collect()
     } else {
-      
+      top_ten <- group_by(ref_tbl, uni_id) %>%
+        summarise(tot_4star=sum(fourstar), tot_3star=sum(threestar), tot_2star=sum(twostar), tot_1star=sum(onestar), tot_un=sum(unclassified)) %>%
+        mutate(score = (tot_4star*4 + tot_3star*3 + tot_2star*2 + tot_1star -tot_un)/(tot_4star+tot_3star+tot_2star+tot_1star+tot_un)) %>%
+        select(uni_id, score) %>%
+        arrange(desc(score)) %>%
+        head(n=10) %>%
+        inner_join(unis_tbl, by = c("uni_id" = "id")) %>%
+        select(uni_name = "University", job_count = "Count of Jobs")%>%
+        collect()
     }
   })
 })
