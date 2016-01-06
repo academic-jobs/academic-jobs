@@ -6,7 +6,7 @@ Sys.setlocale('LC_ALL','C')
 
 # Get unis list, and convert to 'dict-style' list from uni name (key)
 # to id (value)
-my_db <- src_mysql('academic', user="jobs_update", password="DataScienceAcc1516", host="localhost")
+my_db <- src_mysql('academic', user="jobs_update", password="DataScienceAcc1516", host="127.0.0.1", port=1234)
 unis_tbl <- tbl(my_db, 'university')
 ref_tbl <- tbl(my_db, 'ref')
 jobs_tbl <- tbl(my_db, 'jobs')

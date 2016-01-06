@@ -1,102 +1,102 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Details</title>
-<link href="../../bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
-<link href="../../bootstrap/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
-<style type="text/css">
-body{padding:3%;
-background-color:#CFF}
-</style>
-</head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details</title>
+    <link href="../bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <style type="text/css">
+        body{padding:3%;
+            background-color:#CFF}
+        </style>
+    </head>
 
-<body>
-<div class="container">
-<div class="row">
-<div class="span3">
-<img src="../../img/logo.jpg", style="width:50%; height:50%"/>  
-</div>
-<div class="span8 offset2" style="padding-top:2%;">
-<h1>${(title)!''}</h1>
-</div>
-</div>
-<br/>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="span3">
+                    <img src="../img/logo.jpg", style="width:50%; height:50%"/>  
+                </div>
+                <div class="span8 offset2" style="padding-top:2%;">
+                    <h1>${(title)!''}</h1>
+                </div>
+            </div>
+            <br/>
 
-<div class="navbar">
-<div class="navbar-inner">
-<div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
- <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-   </a>
-<a class="brand" href="/index">Home Page!</a>
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                           <span class="icon-bar"></span>
+                           <span class="icon-bar"></span>
+                           <span class="icon-bar"></span>
+                       </a>
+                       <a class="brand" href="../index/index.html">Home Page!</a>
+
+                   </div>
+               </div>
+           </div>
+
+           <div class="row">
+            <div class="span12">
+                <h3>University Name : ${(uni_name)!''}</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span5">
+                <h3>Location : ${(location)!''}</h3>
+            </div>
+            <div class="span5">
+                <h3>Salary : ${(salary)!''}</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span5">
+                <h3>Job type : ${(job_type)!''}</h3>
+            </div>
+            <div class="span5">
+                <h3>Job Hours : ${(job_hours)!''}</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span5">
+                <h3>Placed Time : ${(placedtime)!''}</h3>
+            </div>
+
+
+            <div class="span5">
+                <h3>close Time : ${(closetime)!''}</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span12">
+                <h3>Links : ${(links)!''}</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span12">
+                <h3>Description : </h3>
+            </div>
+        </div>
+        <div class="form-horizontal">
+            <textarea style="width: 100%; height: 30em;" readonly="readonly">
+               ${(explanation)!''}
+           </textarea>
+       </div>
+   </div>
+
+   <div align="center">
+       <a class="btn-danger" href="/analysis/southampton">Analysis</a>
+   </div>
 
 </div>
-</div>
-</div>
-
-<div class="row">
-<div class="span12">
-<h3>University Name : ${(uni_name)!''}</h3>
-</div>
-</div>
-
-<div class="row">
-<div class="span5">
-<h3>Location : ${(location)!''}</h3>
-</div>
-<div class="span5">
-<h3>Salary : ${(salary)!''}</h3>
-</div>
-</div>
-
-<div class="row">
-<div class="span5">
-<h3>Job type : ${(job_type)!''}</h3>
-</div>
-<div class="span5">
-<h3>Job Hours : ${(job_hours)!''}</h3>
-</div>
-</div>
-
-<div class="row">
-<div class="span5">
-<h3>Placed Time : ${(placedtime)!''}</h3>
-</div>
-
-
-<div class="span5">
-<h3>close Time : ${(closetime)!''}</h3>
-</div>
-</div>
-
-<div class="row">
-<div class="span12">
-<h3>Links : ${(links)!''}</h3>
-</div>
-</div>
-
-<div class="row">
-<div class="span12">
-<h3>Description : </h3>
-</div>
-</div>
-<div class="form-horizontal">
-<textarea style="width: 100%; height: 30em;" readonly="readonly">
-	${(explanation)!''}
-</textarea>
-</div>
-</div>
-
-<div align="center">
-	<a class="btn-danger" href="/analysis/southampton">Analysis</a>
-</div>
-
-</div>
-<script src="../../bootstrap/js/jquery.js"></script>
-<script src="../../bootstrap/js/bootstrap.js"></script>
+<script src="../bootstrap/js/jquery.js"></script>
+<script src="../bootstrap/js/bootstrap.js"></script>
 </body>
 </html>

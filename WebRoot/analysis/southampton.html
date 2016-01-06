@@ -1,103 +1,103 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analysis</title>
-<link href="../../bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
-<link href="../../bootstrap/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
-<style type="text/css">
-body{padding:3%;
-background-color:#CFF}
-</style>
-</head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analysis</title>
+  <link href="../bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+  <link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+  <style type="text/css">
+    body{padding:3%;
+      background-color:#CFF}
+    </style>
+  </head>
 
-<body>
-<div class="container">
-<div class="row">
-<div class="span3">
-<img src="../../img/logo.jpg", style="width:50%; height:50%"/>
-</div>
-<div class="span5 offset2" style="padding-top:2%;">
-<h1>Analysis</h1>
-</div>
-</div>
-<br/>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="span3">
+          <img src="../img/logo.jpg", style="width:50%; height:50%"/>
+        </div>
+        <div class="span5 offset2" style="padding-top:2%;">
+          <h1>Analysis</h1>
+        </div>
+      </div>
+      <br/>
 
-<div class="navbar">
-<div class="navbar-inner">
-<div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
- <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-   </a>
-<a class="brand" href="/index">Home Page!</a>
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+           </a>
+           <a class="brand" href="../index/index.html">Home Page!</a>
 
-</div>
-</div>
-</div>
+         </div>
+       </div>
+     </div>
 
-<div class="row" style="padding-top:2%;">
-<div class="span5 offset1">
-<img src="../../img/Figure1.jpg" alt="" />
-</div>
-
-
-
-<div class="span5">
-<img src="../../img/Figure2.jpg" alt="" />
-</div>
-</div>
-
-<div class="row" style="padding-top:5%;">
-<div class="span5 offset1">
-<div style="width:100%;height:20em;">
-	<b><center>Top 10 Universities</center></b>
-<table width='100%' border='0' cellspacing='0' cellpadding='0' align='center'>
-      <tr>
-        <td>Rank</td>
-        <td>Uni_name</td>
-        <td>Scores</td>
-      </tr>
-
-      <#list objectlist as obj>
-      <tr>
-        <td >${(obj.rank)!''}</td>
-        <td>${(obj.uni_name)!''}</td>
-        <td>${(obj.stars)!''}</td>
-      </tr>
-    </#list>
-  </table>
-</div>
-
-</div>
+     <div class="row" style="padding-top:2%;">
+      <div class="span5 offset1">
+        <img src="../img/Figure1.jpg" alt="" />
+      </div>
 
 
-<div class="span5">
-<div style="width:100%;height:20em;">
-<b><center>Top 10 Departments</center></b>
-<table width='100%' border='0' cellspacing='0' cellpadding='0' align='center'>
-      <tr>
-        <td>Rank</td>
-        <td>Department</td>
-        <td>Scores</td>
-      </tr>
 
-      <#list deptlist as dept>
-      <tr>
-        <td >${(dept.rank)!''}</td>
-        <td>${(dept.dept_name)!''}</td>
-        <td>${(dept.stars)!''}</td>
-      </tr>
-    </#list>
-  </table>
-</div>
+      <div class="span5">
+        <img src="../img/Figure2.jpg" alt="" />
+      </div>
+    </div>
 
+    <div class="row" style="padding-top:5%;">
+      <div class="span5 offset1">
+        <div style="width:100%;height:20em;">
+         <b><center>Top 10 Universities</center></b>
+         <table width='100%' border='0' cellspacing='0' cellpadding='0' align='center'>
+          <tr>
+            <td>Rank</td>
+            <td>Uni_name</td>
+            <td>Scores</td>
+          </tr>
+
+          <#list objectlist as obj>
+          <tr>
+            <td >${(obj.rank)!''}</td>
+            <td>${(obj.uni_name)!''}</td>
+            <td>${(obj.stars)!''}</td>
+          </tr>
+          </#list>
+        </table>
+      </div>
+
+    </div>
+
+
+    <div class="span5">
+      <div style="width:100%;height:20em;">
+        <b><center>Top 10 Departments</center></b>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0' align='center'>
+          <tr>
+            <td>Rank</td>
+            <td>Department</td>
+            <td>Scores</td>
+          </tr>
+
+          <#list deptlist as dept>
+          <tr>
+            <td >${(dept.rank)!''}</td>
+            <td>${(dept.dept_name)!''}</td>
+            <td>${(dept.stars)!''}</td>
+          </tr>
+          </#list>
+        </table>
+      </div>
+
+    </div>
+  </div>
 </div>
-</div>
-</div>
-<script src="bootstrap/js/jquery.js"></script>
-<script src="bootstrap/js/bootstrap.js"></script>
+<script src="../bootstrap/js/jquery.js"></script>
+<script src="../bootstrap/js/bootstrap.js"></script>
 </body>
 </html>
