@@ -2,7 +2,7 @@ Academic Jobs
 ========
 Web site designed using ![HTML5 CSS3](http://www.xusweb.com/images/html5_css3.png).
 * version: 1.0
-* Group project of the module "COMP6233: Topics in Computer Science", MSc in Computer Science, University of Southampton.
+* Group project of the module "COMP6235: Foundations of Data Science", University of Southampton.
 
 ## [Collaborators](https://github.com/academic-jobs/academic-jobs/graphs/contributors)
 * Olivia Wilson. Contact: <oew1v07@soton.ac.uk>
@@ -18,4 +18,7 @@ This project is under the GNU Lesser General Public License.
 A webpage to responsively search for academic jobs. It also contains a shiny server implemented in R and hosted on a remote server.
 
 ## Deployment
-You can find the shiny server for researchers at (http://104.130.163.128:3838/jobs/)
+You can find the shiny server for researchers at (http://104.130.163.128:3838/jobs/) and the searching functionality at 10.9.166.227/index
+
+## Data Sources
+The two datasets used in this project were academic jobs scraped from http://www.jobs.ac.uk/ and REF 2014 data provided by a CSV found at http://results.ref.ac.uk/DownloadResults/
