@@ -6,8 +6,6 @@
 *.doc
 *.docx
 *.xlsx
-*ps.pub
-*ps
 *.DS_Store
 *.txt
 *.sql
